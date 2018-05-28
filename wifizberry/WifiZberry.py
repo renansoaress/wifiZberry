@@ -28,7 +28,8 @@ class WifiZberry(object):
         subprocess.call(['systemctl', 'daemon-reload'])
         subprocess.call(['systemctl', 'restart', 'dhcpcd'])
         print('Connected!')
-        
+
+    @classmethod
     def read_write_wifi_file(self, ssid, psk):
         newtext = ''
         with open('/etc/wpa_supplicant/wpa_supplicant.conf', 'r') as file:
