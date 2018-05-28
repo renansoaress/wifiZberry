@@ -1,1 +1,1 @@
-from wifizberry import WifiZberry
+from wifizberry.WifiZberry import WifiZberry
