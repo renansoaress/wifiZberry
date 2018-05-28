@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+import re
 import subprocess
 
 from wifi import Cell
 
 class WifiZberry(object):
     def __init__(self):
-        # self._wifis = Cell()
         self._list_wifi = []
 
     @classmethod
@@ -22,13 +22,27 @@ class WifiZberry(object):
 
     @classmethod
     def connect(self, user, password):
-        file = open('/etc/wpa_supplicant/wpa_supplicant.conf', 'w')
-        file.write('login:{} senha:{}'.format(user,password))
-        file.close()
+        self.read_write_wifi_file(user,password)
         #sudo systemctl daemon-reload
         #sudo systemctl restart dhcpcd
         subprocess.call(['systemctl', 'daemon-reload'])
         subprocess.call(['systemctl', 'restart', 'dhcpcd'])
-        print('executo tudo certim')
+        print('Connected!')
+        
+    def read_write_wifi_file(self, ssid, psk):
+        newtext = ''
+        with open('/etc/wpa_supplicant/wpa_supplicant.conf', 'r') as file:
+            for line in file:
+                line = line.strip('\n')
+                line = line.strip('	')
+                if re.search(r'^ssid="[\w*|\s*"$]', line):
+                    line = 'ssid="{}"'.format(ssid)
+                if re.search(r'^psk=[\w*|\s*"$]', line):
+                    line = 'psk="{}"'.format(psk)
 
-#/etc/wpa_supplicant/wpa_supplicant.conf
+                    newtext += line + '\n'
+            file.close()
+
+        with open('/etc/wpa_supplicant/wpa_supplicant.conf', 'w') as file:
+            file.write(newtext)
+            file.close()
