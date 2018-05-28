@@ -23,8 +23,6 @@ class WifiZberry(object):
     @classmethod
     def connect(self, user, password):
         self.read_write_wifi_file(user,password)
-        #sudo systemctl daemon-reload
-        #sudo systemctl restart dhcpcd
         subprocess.call(['systemctl', 'daemon-reload'])
         subprocess.call(['systemctl', 'restart', 'dhcpcd'])
         print('Connected!')
@@ -41,9 +39,14 @@ class WifiZberry(object):
                 if re.search(r'^psk=[\w*|\s*"$]', line):
                     line = 'psk="{}"'.format(psk)
 
-                    newtext += line + '\n'
+                newtext += line + '\n'
             file.close()
 
         with open('/etc/wpa_supplicant/wpa_supplicant.conf', 'w') as file:
             file.write(newtext)
             file.close()
+
+if __name__ == "__main__":
+    #Test write file
+    a = WifiZberry()
+    a.read_write_wifi_file('Renan', '123')
