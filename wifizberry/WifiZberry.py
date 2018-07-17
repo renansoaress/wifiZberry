@@ -25,6 +25,7 @@ class WifiZberry(object):
         self.read_write_wifi_file(user,password)
         subprocess.call(['systemctl', 'daemon-reload'])
         subprocess.call(['systemctl', 'restart', 'dhcpcd'])
+        subprocess.call(['/etc/init.d/networking', 'restart'])
         print('Connected!')
 
     @classmethod
